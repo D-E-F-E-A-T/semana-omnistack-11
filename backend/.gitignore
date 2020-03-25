@@ -1,0 +1,4 @@
+node_modules
+
+__tests__/db_test.sqlite
+__tests__/coverage

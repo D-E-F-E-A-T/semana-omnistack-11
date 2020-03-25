@@ -1,7 +1,16 @@
 // Update with your config settings.
 
 module.exports = {
-
+  test: {
+    client: 'sqlite3',
+    connection: {
+      filename: './__tests__/db_test.sqlite'
+    },
+    migrations: {
+      directory: './src/database/migrations'
+    },
+    useNullAsDefault: true
+  },
   development: {
     client: 'sqlite3',
     connection: {
