@@ -32,4 +32,13 @@ describe('Incidents', () => {
       expect(response.body).toHaveProperty('id')
     })
   })
+
+  describe('GET: /incidents', () => {
+    it('should be able to list all incidents', async () => {
+      const response = await request(app).get('/incidents')
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual([])
+    })
+  })
 })

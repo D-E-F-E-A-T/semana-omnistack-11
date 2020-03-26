@@ -1,6 +1,12 @@
 const connection = require('../database/connection')
 
 class IncidentController {
+  async index (req, res) {
+    const incidents = await connection('incidents').select('*')
+
+    return res.status(200).json(incidents)
+  }
+
   async store (req, res) {
     const { title, description, value } = req.body
     const ongId = req.headers.authorization
