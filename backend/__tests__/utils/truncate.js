@@ -1,14 +1,9 @@
 const knex = require('knex')
 
-const tables = [
-  'ongs',
-  'incidents'
-]
+const config = require('../../knexfile')
+const connection = knex(config.test)
 
-module.exports = () => {
-  return Promise.all(
-    tables.map(table => {
-      return knex.raw('truncate table ' + table + ' cascade')
-    })
-  )
+module.exports = async () => {
+  await connection.raw('DELETE FROM incidents')
+  await connection.raw('DELETE FROM ongs')
 }
