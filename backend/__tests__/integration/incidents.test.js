@@ -1,32 +1,24 @@
 const request = require('supertest')
-const faker = require('faker')
 
 const app = require('../../src/app').express
 const truncate = require('../utils/truncate')
 
+const ongPayload = require('../payloads/ong')
+const incidentPayload = require('../payloads/incident')
+
 describe('Incidents', () => {
-  afterEach(async () => {
+  beforeEach(async () => {
     await truncate()
   })
 
   describe('POST: /incidents', () => {
     it('should be able to store a new incident', async () => {
-      const ongId = await request(app).post('/ongs').send({
-        name: faker.name.findName(),
-        email: faker.internet.email(),
-        whatsapp: faker.phone.phoneNumber(),
-        city: faker.address.city(),
-        uf: faker.address.stateAbbr()
-      })
+      const ongId = await request(app).post('/ongs').send(ongPayload)
 
       const response = await request(app)
         .post('/incidents')
         .set('Authorization', ongId)
-        .send({
-          title: faker.name.title(),
-          description: faker.lorem.text(),
-          value: faker.commerce.price()
-        })
+        .send(incidentPayload)
 
       expect(response.status).toBe(201)
       expect(response.body).toHaveProperty('id')
@@ -39,6 +31,23 @@ describe('Incidents', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual([])
+    })
+  })
+
+  describe('DELETE: /incidents/:id', () => {
+    it('sholud be able to delete a incident by id', async () => {
+      const ong = await request(app).post('/ongs').send(ongPayload)
+
+      const incident = await request(app)
+        .post('/incidents')
+        .set('Authorization', ong.body.id)
+        .send(incidentPayload)
+
+      const response = await request(app)
+        .delete(`/incidents/${incident.body.id}`)
+        .set('Authorization', ong.body.id)
+
+      expect(response.status).toBe(204)
     })
   })
 })

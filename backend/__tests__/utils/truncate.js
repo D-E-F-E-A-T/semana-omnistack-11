@@ -1,7 +1,4 @@
-const knex = require('knex')
-
-const config = require('../../knexfile')
-const connection = knex(config.test)
+const connection = require('../../src/database/connection')
 
 module.exports = async () => {
   await connection.raw('DELETE FROM incidents')
